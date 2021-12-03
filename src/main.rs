@@ -22,6 +22,7 @@ fn main() -> std::io::Result<()> {
 
     match selection {
         Some(0) => day_1(),
+        Some(1) => day_2(),
         _ => println!("User did not select anything"),
     }
 
@@ -56,8 +57,8 @@ fn day_1() {
 
         if readings.len() - i >= 4 {
             // combine the first 3 items
-            let mut low_combined_readings = readings[i] + readings[i + 1] + readings[i + 2];
-            let mut high_combined_readings = readings[i + 1] + readings[i + 2] + readings[i + 3];
+            let low_combined_readings = readings[i] + readings[i + 1] + readings[i + 2];
+            let high_combined_readings = readings[i + 1] + readings[i + 2] + readings[i + 3];
             // check if the high readings are higher than the low readings
             if high_combined_readings > low_combined_readings {
                 total_combined_increases += 1;
@@ -67,4 +68,58 @@ fn day_1() {
         }
     }
     println!("part 2: {:?}", total_combined_increases);
+}
+
+fn day_2() {
+    // PART 1
+    // read file from disk
+    let contents = fs::read_to_string("src/day2/instructions.txt").unwrap();
+    let split_string: Vec<&str> = contents.split("\n").collect();
+    // Vector of strings, each string is composed of a string and a int
+    let mut instructions: Vec<(String, i32)> = Vec::new();
+    for s in split_string {
+        let split_string: Vec<&str> = s.split(" ").collect();
+        let instruction = split_string[0];
+        let value = split_string[1].parse::<i32>().unwrap();
+        instructions.push((instruction.to_string(), value));
+    }
+    let mut depth = 0;
+    let mut horizontal = 0;
+
+    for i in 0..instructions.len() {
+        match instructions[i].0.as_str() {
+            "forward" => horizontal += instructions[i].1,
+            "up" => depth += instructions[i].1,
+            "down" => depth -= instructions[i].1,
+            _ => (),
+        };
+    }
+    println!(
+        "part 1: {:?} * {:?} = {:?}",
+        horizontal.abs(),
+        depth.abs(),
+        horizontal.abs() * depth.abs()
+    );
+
+    // PART 2
+    let mut depth = 0;
+    let mut horizontal = 0;
+    let mut aim = 0;
+    for i in 0..instructions.len() {
+        match instructions[i].0.as_str() {
+            "forward" => {
+                horizontal += instructions[i].1;
+                depth += aim * instructions[i].1;
+            }
+            "up" => aim -= instructions[i].1,
+            "down" => aim += instructions[i].1,
+            _ => (),
+        };
+    }
+    println!(
+        "part 2: {:?} * {:?} = {:?}",
+        horizontal.abs(),
+        depth.abs(),
+        horizontal.abs() * depth.abs()
+    );
 }
