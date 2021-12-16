@@ -1,5 +1,20 @@
 use std::u32;
 
+struct BinaryCounter {
+    zero: u32,
+    one: u32,
+}
+
+struct Rates {
+    epsilon: String,
+    gamma: String,
+}
+
+struct Life_Support_Ratings {
+    oxygen_generator: String,
+    co2_scrubber: String,
+}
+
 pub fn main() {
     let split_string = crate::utils::read_file("src/data/day3.txt");
     // collect the position of the string into a vector
@@ -14,10 +29,7 @@ pub fn main() {
     let mut gamma_rate = String::new();
     let mut epsilon_rate = String::new();
     // calculate the rate of gamma rate by checking the most frequent character
-    struct BinaryCounter {
-        zero: u32,
-        one: u32,
-    }
+
     for binary_str in matrix {
         let mut counter = BinaryCounter { zero: 0, one: 0 };
         for binary in binary_str.chars() {
@@ -62,14 +74,26 @@ mod tests {
     00010
     01010";
 
-    struct Rates {
-        epsilon: String,
-        gamma: String,
-    }
-
     #[test]
     fn test_part2() {
-        let t1 = 1;
-        assert_eq!(t1, 1);
+        let split_content: Vec<String> = input.split('\n').map(|x| x.to_string()).collect();
+        for char_index in 0..split_content[0].len() {
+            // let mut acc_vec: Vec<u8> = Vec::new();
+            let mut counter = BinaryCounter { zero: 0, one: 0 };
+            for binary_string in &split_content {
+                let char = binary_string
+                    .chars()
+                    .nth(char_index)
+                    .unwrap()
+                    .to_digit(10)
+                    .unwrap() as u8;
+                // acc_vec.push(char);
+                if char == 0 {
+                    counter.zero += 1;
+                } else {
+                    counter.one += 1;
+                }
+            }
+        }
     }
 }
