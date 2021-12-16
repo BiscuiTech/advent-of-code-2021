@@ -1,14 +1,12 @@
-use std::fs;
-
 pub fn main() {
     // PART 1
     // read file from disk
-    let contents = fs::read_to_string("src/data/day2.txt").unwrap();
-    let split_string: Vec<&str> = contents.split("\n").collect();
+    let split_string = crate::utils::read_file("src/data/day2.txt");
+
     // Vector of strings, each string is composed of a string and a int
     let mut instructions: Vec<(String, i32)> = Vec::new();
     for s in split_string {
-        let split_string: Vec<&str> = s.split(" ").collect();
+        let split_string: Vec<&str> = s.split(' ').collect();
         let instruction = split_string[0];
         let value = split_string[1].parse::<i32>().unwrap();
         instructions.push((instruction.to_string(), value));
@@ -16,11 +14,11 @@ pub fn main() {
     let mut depth = 0;
     let mut horizontal = 0;
 
-    for i in 0..instructions.len() {
-        match instructions[i].0.as_str() {
-            "forward" => horizontal += instructions[i].1,
-            "up" => depth += instructions[i].1,
-            "down" => depth -= instructions[i].1,
+    for item in &instructions {
+        match item.0.as_str() {
+            "forward" => horizontal += item.1,
+            "up" => depth += item.1,
+            "down" => depth -= item.1,
             _ => (),
         };
     }
@@ -35,14 +33,14 @@ pub fn main() {
     let mut depth = 0;
     let mut horizontal = 0;
     let mut aim = 0;
-    for i in 0..instructions.len() {
-        match instructions[i].0.as_str() {
+    for item in &instructions {
+        match item.0.as_str() {
             "forward" => {
-                horizontal += instructions[i].1;
-                depth += aim * instructions[i].1;
+                horizontal += item.1;
+                depth += aim * item.1;
             }
-            "up" => aim -= instructions[i].1,
-            "down" => aim += instructions[i].1,
+            "up" => aim -= item.1,
+            "down" => aim += item.1,
             _ => (),
         };
     }

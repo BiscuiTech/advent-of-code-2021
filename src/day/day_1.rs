@@ -1,10 +1,6 @@
-use std::fs;
-
 pub fn main() {
     // PART 1
-    // read file from disk
-    let contents = fs::read_to_string("src/data/day1.txt").unwrap();
-    let split_string: Vec<&str> = contents.split("\n").collect();
+    let split_string = crate::utils::read_file("src/data/day1.txt");
     // convert string to int
     let readings: Vec<i32> = split_string
         .iter()

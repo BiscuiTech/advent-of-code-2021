@@ -2,6 +2,7 @@ use console::Term;
 use dialoguer::{theme::ColorfulTheme, Select};
 
 mod day;
+mod utils;
 
 fn main() -> std::io::Result<()> {
     // array of 24 day strings, ie: 'day 1', 'day 2', 'day 3', ...
