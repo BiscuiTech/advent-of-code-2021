@@ -1,21 +1,12 @@
-use std::u32;
-
+use std::{fs, u32};
 struct BinaryCounter {
     zero: u32,
     one: u32,
 }
 
-struct Rates {
-    epsilon: String,
-    gamma: String,
-}
+const WIDTH: usize = 12;
 
-struct Life_Support_Ratings {
-    oxygen_generator: String,
-    co2_scrubber: String,
-}
-
-pub fn main() {
+fn part1() {
     let split_string = crate::utils::read_file("src/data/day3.txt");
     // collect the position of the string into a vector
     let mut matrix = vec![String::new(); split_string[0].chars().count()];
@@ -57,43 +48,38 @@ pub fn main() {
     println!("Answer: {}", epsilon_decimal * gamma_decimal);
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn get_life_ratings(nums: Vec<u32>, width: usize) -> (u32, u32) {
+    let oxy = (0..width)
+        .rev()
+        .scan(nums.clone(), |oxy, i| {
+            let one = oxy.iter().filter(|n| *n & 1 << i > 0).count() >= (oxy.len() + 1) / 2;
+            oxy.drain_filter(|n| (*n & 1 << i > 0) != one);
+            oxy.first().copied()
+        })
+        .last()
+        .unwrap();
 
-    const input: &str = "00100
-    11110
-    10110
-    10111
-    10101
-    01111
-    00111
-    11100
-    10000
-    11001
-    00010
-    01010";
+    let co2 = (0..width)
+        .rev()
+        .scan(nums, |co2, i| {
+            let one = co2.iter().filter(|n| *n & 1 << i > 0).count() >= (co2.len() + 1) / 2;
+            co2.drain_filter(|n| (*n & 1 << i > 0) == one);
+            co2.first().copied()
+        })
+        .last()
+        .unwrap();
+    (oxy, co2)
+}
 
-    #[test]
-    fn test_part2() {
-        let split_content: Vec<String> = input.split('\n').map(|x| x.to_string()).collect();
-        for char_index in 0..split_content[0].len() {
-            // let mut acc_vec: Vec<u8> = Vec::new();
-            let mut counter = BinaryCounter { zero: 0, one: 0 };
-            for binary_string in &split_content {
-                let char = binary_string
-                    .chars()
-                    .nth(char_index)
-                    .unwrap()
-                    .to_digit(10)
-                    .unwrap() as u8;
-                // acc_vec.push(char);
-                if char == 0 {
-                    counter.zero += 1;
-                } else {
-                    counter.one += 1;
-                }
-            }
-        }
-    }
+pub fn main() {
+    part1();
+    let nums = fs::read_to_string("src/data/day3.txt")
+        .unwrap()
+        .lines()
+        .map(|l| u32::from_str_radix(l, 2).unwrap())
+        .collect::<Vec<u32>>();
+
+    let (oxy, co2) = get_life_ratings(nums, WIDTH);
+
+    println!("{}", oxy * co2);
 }

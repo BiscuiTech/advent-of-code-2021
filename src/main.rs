@@ -1,3 +1,5 @@
+#![feature(drain_filter)]
+
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Select};
 
