@@ -27,6 +27,7 @@ fn main() -> std::io::Result<()> {
         Some(0) => day::day_1::main(),
         Some(1) => day::day_2::main(),
         Some(2) => day::day_3::main(),
+        Some(3) => day::day_4::main(),
         _ => println!("User did not select anything"),
     }
 
